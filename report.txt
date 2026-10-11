@@ -1,0 +1,581 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------------------------------------------------------
+% PACKAGES
+% ---------------------------------------------------------
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{times}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{tocloft}
+
+% ---------------------------------------------------------
+% HYPERLINK SETUP
+% ---------------------------------------------------------
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue
+}
+
+% ---------------------------------------------------------
+% PAGE STYLE
+% ---------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Affective-Cognitive Digital Twins for Predictive Personalized Learning}
+\fancyhead[R]{Final Project Report}
+\fancyfoot[C]{\thepage}
+
+% ---------------------------------------------------------
+% SECTION FORMATTING
+% ---------------------------------------------------------
+\titleformat{\section}
+  {\large\bfseries}
+  {\thesection}
+  {0.5em}
+  {}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries}
+  {\thesubsection}
+  {0.5em}
+  {}
+
+\titleformat{\subsubsection}
+  {\normalsize\itshape}
+  {\thesubsubsection}
+  {0.5em}
+  {}
+
+% ---------------------------------------------------------
+% CODE LISTING STYLE
+% ---------------------------------------------------------
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    columns=fullflexible,
+    keepspaces=true
+}
+
+% ---------------------------------------------------------
+% DOCUMENT
+% ---------------------------------------------------------
+\begin{document}
+
+% =========================================================
+% PRELIMINARY PAGES
+% =========================================================
+
+% --- TITLE PAGE ---
+\begin{titlepage}
+\begin{center}
+\vspace*{2cm}
+
+{\Large \textbf{Affective-Cognitive Digital Twins for Predictive Personalized Learning}}
+
+\vspace{1.5cm}
+
+{\large \textbf{PROJECT REPORT}}
+
+\vspace{0.5cm}
+Submitted by
+\vspace{0.5cm}
+
+{\normalsize
+\textbf{Pragya Sekar} (23BCE1491) \\
+\textbf{Fowzia Nilofer} (23BCE5127)
+}
+
+\vspace{1.5cm}
+
+Under the guidance of\\
+\textbf{Dr. L. Shyamala}, Professor\\
+(Staff ID: 50918)
+
+\vspace{2cm}
+\textbf{Department of Computer Science and Engineering}\\
+\textbf{Vellore Institute of Technology, Chennai}
+
+\vspace{1cm}
+Course Code: BCSE497J -- Project - I
+
+\end{center}
+\end{titlepage}
+
+\newpage
+% --- BONAFIDE CERTIFICATE ---
+\begin{center}
+{\Large \textbf{BONAFIDE CERTIFICATE}}
+\end{center}
+\vspace{1cm}
+This is to certify that the project report entitled \textbf{"Affective-Cognitive Digital Twins for Predictive Personalized Learning"} is the bonafide work of \textbf{Pragya Sekar (23BCE1491)} and \textbf{Fowzia Nilofer (23BCE5127)} who carried out the project work under my supervision.
+
+\vspace{3cm}
+\noindent
+\begin{tabular}{@{}p{8cm}p{8cm}@{}}
+\textbf{SIGNATURE} & \textbf{SIGNATURE} \\
+& \\
+\textbf{Dr. L. Shyamala} & \textbf{Head of the Department} \\
+Project Guide & Department of CSE \\
+Professor, Dept. of CSE & VIT Chennai \\
+\end{tabular}
+
+\newpage
+% --- DECLARATION ---
+\begin{center}
+{\Large \textbf{DECLARATION}}
+\end{center}
+\vspace{1cm}
+We hereby declare that the project report entitled \textbf{"Affective-Cognitive Digital Twins for Predictive Personalized Learning"} submitted to Vellore Institute of Technology, Chennai, is a record of an original work done by us under the guidance of Dr. L. Shyamala, Professor, Department of CSE. This project work has not been submitted elsewhere for the award of any degree or diploma.
+
+\vspace{2cm}
+\noindent Date: \rule{4cm}{0.4pt} \hfill Pragya Sekar (23BCE1491) \\
+\noindent Place: Chennai \hfill Fowzia Nilofer (23BCE5127)
+
+\newpage
+% --- ACKNOWLEDGEMENT ---
+\begin{center}
+{\Large \textbf{ACKNOWLEDGEMENT}}
+\end{center}
+\vspace{1cm}
+We express our deep sense of gratitude to our guide, \textbf{Dr. L. Shyamala}, for her continuous support, constructive feedback, and invaluable guidance throughout this project. We also extend our profound thanks to the Department of Computer Science and Engineering, VIT Chennai, for providing the state-of-the-art computational resources necessary to train the deep learning architectures proposed in this work.
+
+\newpage
+% --- ABSTRACT ---
+\begin{center}
+{\Large \textbf{ABSTRACT}}
+\end{center}
+\vspace{0.5cm}
+Contemporary intelligent tutoring systems predominantly operate under a reactive paradigm, updating learner knowledge retrospectively while ignoring critical transient affective states such as frustration, confusion, boredom, and concentration. Furthermore, applying traditional reinforcement learning in education requires online trial-and-error with human learners, raising significant ethical and pedagogical risks. 
+
+This research proposes the Affective-Cognitive Digital Twin (ACDT) framework—a robust, offline, counterfactual educational planning system. Ingesting over 6.1 million interactions from 4,918 students via the ASSISTments dataset, the framework constructs a dual-state Student Encoder utilizing multi-head self-attention. This encoder maps chronological interaction sequences into a 128-dimensional joint latent representation ($\mathbf{z}_t$) tracking both cognitive mastery and emotional state simultaneously. This joint vector conditions a probabilistic Action-Conditioned World Model equipped with a Mixture Density Network (MDN) head, enabling the generation of simulated future learner states alongside epistemic uncertainty metrics.
+
+Using a Monte Carlo Tree Search (MCTS) planner equipped with Upper Confidence Bound (UCB1) heuristics, the system discovers optimal instructional paths by maximizing a multi-objective reward function over a catalog of 53,091 candidate problems. The optimal structural plan is then translated into empathetic, personalized pedagogy through a generative Large Language Model (LLM) fallback chain via the OpenRouter API. Empirical results demonstrate strong predictive capabilities (Cognitive AUC: 0.76, World Model RMSE: 0.288) and pedagogically sound MCTS trajectories that adapt based on the learner's emotional state. The complete pipeline is deployed via an interactive MERN-stack and Tailwind CSS web dashboard featuring real-time Server-Sent Events (SSE) telemetry, proving the viability of affective-cognitive simulation without live human experimentation.
+
+\newpage
+% --- TOC, LOF, LOT ---
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+
+% --- LIST OF ABBREVIATIONS ---
+\begin{center}
+{\Large \textbf{LIST OF ABBREVIATIONS}}
+\end{center}
+\vspace{0.5cm}
+\begin{itemize}[label={}]
+    \item \textbf{ACDT} \quad Affective-Cognitive Digital Twin
+    \item \textbf{AUC} \quad Area Under the Curve
+    \item \textbf{BKT} \quad Bayesian Knowledge Tracing
+    \item \textbf{DKT} \quad Deep Knowledge Tracing
+    \item \textbf{ITS} \quad Intelligent Tutoring System
+    \item \textbf{LLM} \quad Large Language Model
+    \item \textbf{LSTM} \quad Long Short-Term Memory
+    \item \textbf{MCTS} \quad Monte Carlo Tree Search
+    \item \textbf{MDN} \quad Mixture Density Network
+    \item \textbf{RL} \quad Reinforcement Learning
+    \item \textbf{SAKT} \quad Self-Attentive Knowledge Tracing
+    \item \textbf{SSE} \quad Server-Sent Events
+    \item \textbf{UCB1} \quad Upper Confidence Bound 1
+\end{itemize}
+
+\newpage
+% =========================================================
+% CHAPTER 1: INTRODUCTION
+% =========================================================
+\section{Chapter 1 - Introduction}
+
+\subsection{Background and Motivation}
+Modern computer-supported educational environments have transitioned from early static Computer-Assisted Instruction (CAI) systems to adaptive Intelligent Tutoring Systems (ITS). Despite significant advancements in automated assessment, contemporary digital learning platforms remain fundamentally constrained by a reactive paradigm. Traditional architectures assess learner mastery retrospectively: knowledge state estimates are revised only after a response has been recorded, typically optimizing solely for immediate next-step correctness:
+\begin{equation}
+\max P(C_{t+1}=1 | \mathcal{H}_t)
+\end{equation}
+where $C_{t+1}$ represents the correctness of the subsequent interaction given the historical context $\mathcal{H}_t$.
+
+Furthermore, education is frequently treated as an item-matching recommendation problem, mathematically disregarding pedagogical prerequisites, memory retention decay, and, crucially, the emotional state of the learner. Human pedagogical theories, such as Vygotsky's Zone of Proximal Development and the Yerkes-Dodson law of arousal, explicitly dictate that cognitive performance is strongly influenced by affective state. When instructional difficulty significantly exceeds cognitive capacity, learners transition from productive struggle into frustration and disengagement. Conversely, tasks with insufficient cognitive demand relative to mastery induce boredom.
+
+Reinforcement Learning (RL) provides a computationally rigorous approach for curriculum sequencing. However, conventional model-free algorithms require trial-and-error policy updates through direct interaction with live environments. In an educational context, subjecting human students to exploratory and potentially suboptimal pedagogical trajectories introduces severe ethical risks and negative learning outcomes. To address these systemic limitations, this project proposes the Affective-Cognitive Digital Twin (ACDT) framework. ACDT constructs an offline mathematical model of the learner that jointly represents cognitive mastery and affective state, allowing pedagogical policies to be simulated and optimized prior to live intervention.
+
+\subsection{Problem Statement}
+Current educational recommendation architectures suffer from distinct limitations:
+\begin{enumerate}
+    \item \textbf{Myopic Reactive Optimization:} Knowledge Tracing models update representations retrospectively and optimize for short-term success ($t+1$) rather than long-term conceptual retention.
+    \item \textbf{Affect Blindness:} Schedulers treat learners as affectively neutral stochastic agents. Emotions such as frustration, confusion, and boredom are omitted from the state space representation.
+    \item \textbf{Live Trial-and-Error Vulnerability:} Online RL explores actions through interaction with human learners, requiring thousands of sub-optimal episodes before converging on a safe policy.
+    \item \textbf{Separation of Generative AI and Structural Planning:} Current Large Language Model (LLM) based tutors attempt to perform both structural curriculum planning and pedagogical generation. This violates separation-of-concerns, resulting in severe hallucination risk.
+\end{enumerate}
+
+\subsection{Objectives}
+The primary objective of the ACDT framework is to replace reactive, affect-blind educational routing with proactive, counterfactual affective-cognitive simulation. Specific objectives are:
+\begin{enumerate}
+    \item Normalize massive-scale educational telemetry into chronological multi-dimensional time-series tensors.
+    \item Develop a dual-head Student Encoder (utilizing self-attention mechanisms) that jointly tracks cognitive proficiency and affective trajectories (Frustration, Confusion, Concentration, Boredom).
+    \item Construct a probabilistic Action-Conditioned World Model capable of generating simulated future learner-state distributions with epistemic uncertainty estimation.
+    \item Perform offline multi-step simulations using Monte Carlo Tree Search (MCTS) to identify interventions that balance mastery acquisition and affective well-being.
+    \item Integrate a resilient LLM-based generative layer via OpenRouter to translate optimized structural plans into empathetic micro-lessons.
+    \item Deploy a full-stack MERN Dashboard utilizing Server-Sent Events (SSE) to visualize the predictive pipeline in real-time.
+\end{enumerate}
+
+\subsection{Scope and Expected Outcomes}
+The scope of this project encompasses the end-to-end development of the ACDT pipeline. This involves processing over 6.1 million rows from ASSISTments 2012-2013, training deep neural architectures (Transformers, LSTMs, MDNs), engineering rigorous mathematical search algorithms (MCTS), orchestrating API-based LLM generation, and building a real-time reactive web application. The expected outcome is a unified framework that proves the feasibility of predicting emotional learning states and optimizing instructional paths entirely offline.
+
+\subsection{Organization of the Report}
+The report is structured as follows: Chapter 2 reviews the existing literature. Chapter 3 details the mathematical methodology and system architecture of the ACDT pipeline. Chapter 4 provides extensive implementation details, deep-learning metrics, ablation comparisons, and dashboard deployment specifics. Chapter 5 concludes the research with major findings.
+
+\newpage
+% =========================================================
+% CHAPTER 2: LITERATURE / PATENT REVIEW
+% =========================================================
+\section{Chapter 2 - Literature / Patent Review}
+
+\subsection{Knowledge Tracing and Student Mastery Models}
+Knowledge Tracing (KT) forms the computational backbone of modern Intelligent Tutoring Systems. 
+
+\subsubsection{Bayesian Knowledge Tracing}
+Corbett and Anderson (1995) introduced Bayesian Knowledge Tracing (BKT), modeling learner mastery using a two-state Hidden Markov Model (HMM). Although highly interpretable, BKT assumes strictly binary skill states and struggles to capture complex relationships between historical interactions.
+
+\subsubsection{Deep Knowledge Tracing}
+Piech et al. (2015) introduced Deep Knowledge Tracing (DKT), leveraging Recurrent Neural Networks (RNNs) and LSTMs to represent student interaction histories. DKT maps high-dimensional interaction sequences to hidden representations, demonstrating substantial improvements over BKT for next-response prediction. However, DKT does not explicitly support counterfactual instructional planning or affect modeling.
+
+\subsubsection{Self-Attentive Knowledge Tracing}
+Pandey and Karypis (2019) introduced Self-Attentive Knowledge Tracing (SAKT), replacing recurrent architectures with scaled dot-product self-attention mechanisms. This allowed models to weigh historical exercises dynamically when predicting future responses, solving the vanishing gradient problem in long learning histories. Despite structural improvements, SAKT remains entirely reactive.
+
+\subsection{Affective Computing and Sensor-Free Emotion Modeling}
+Baker et al. (2013) demonstrated that affective states can be robustly inferred from behavioral telemetry without requiring invasive hardware like webcams or biometrics. Relevant behavioral indicators include response latency, repeated failed attempts, hint usage, idle time, and rapid "gaming the system" behavior. ACDT extends this paradigm by embedding these predictions directly into a sequential latent state, linking them continuously to cognitive performance.
+
+\subsection{Reinforcement Learning, World Models, and Digital Twins}
+Model-free RL has been widely proposed for educational recommendation. However, online exploration exposes students to suboptimal learning trajectories. World-model approaches, such as the Dreamer architecture by Hafner et al. (2023) and earlier works by Ha and Schmidhuber (2018), demonstrate that an agent can learn a latent environment transition model and perform search and planning entirely inside the learned hallucinated representation. ACDT adapts this principle to education: the "environment" is the cognitive-affective state of the human learner.
+
+\subsection{LLM-Based Tutoring Systems}
+The advent of Large Language Models, particularly GPT-3 and GPT-4 (Brown et al., 2020), has revolutionized natural language processing in education. LLMs excel at generating empathetic, context-aware dialogue and adaptive explanations. However, utilizing LLMs as end-to-end curriculum planners presents severe risks: they lack mathematically rigorous optimization functions, frequently hallucinate prerequisites, and suffer from high computational latency during complex multi-step reasoning. Consequently, ACDT restricts the LLM to a purely generative translation role—acting strictly upon the deterministic structural decisions formulated by the MCTS planner.
+
+\subsection{Comparative Analysis and Research Gap}
+Existing research has extensively investigated Knowledge Tracing, Affective Computing, and RL independently. A significant gap remains in integrating these domains into a unified framework. ACDT addresses this gap by combining joint dual-state modeling, action-conditioned world simulation, mathematical MCTS planning, and LLM-based generative translation into a single pipeline.
+
+\begin{table}[H]
+\centering
+\caption{Comparison of Existing Approaches with ACDT}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Framework} & \textbf{Cognitive} & \textbf{Affect} & \textbf{World Model} & \textbf{Offline Planning} & \textbf{LLM Integration} \\
+\midrule
+BKT (Corbett '95) & Yes & No & No & No & No \\
+DKT (Piech '15) & Yes & No & No & No & No \\
+Sensor-Free (Baker '13) & No & Yes & No & No & No \\
+Dreamer (Hafner '23) & No & No & Yes & Yes & No \\
+GPT-4 Tutors & Yes & Simulated & No & No & Yes \\
+\textbf{ACDT (Proposed)} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+% =========================================================
+% CHAPTER 3: METHODOLOGY / SYSTEM DESIGN
+% =========================================================
+\section{Chapter 3 - Methodology / System Design}
+
+\subsection{Proposed Methodology and System Architecture}
+The Affective-Cognitive Digital Twin (ACDT) framework operates via a robust six-phase pipeline designed to meticulously separate predictive state estimation, structural curriculum planning, and generative language tutoring. By compartmentalizing these processes, the system preserves mathematical rigor while providing human-like empathetic tutoring.
+
+\subsection{Phase 1: Telemetry Ingestion and Tensor Formatting}
+Before any machine learning can occur, massive-scale educational log data must be converted into standardized mathematical representations. We utilize the ASSISTments 2012-2013 dataset, filtering the raw logs for critical interaction markers: \texttt{problem\_id}, \texttt{skill\_id}, \texttt{correct}, \texttt{ms\_first\_response}, \texttt{hint\_count}, and \texttt{attempt\_count}.
+
+Crucially, sensor-free affect detection relies on comparative temporal metrics rather than absolute values. Therefore, we engineer normalized features such as the \texttt{hint\_to\_attempt\_ratio} and standard-scaled latency scores (\texttt{response\_time\_z\_score}) relative to a student's historical baseline. To prepare the data for recurrent and attention-based neural networks, the sequential interactions for each user are grouped chronologically, truncated or padded to a fixed historical window (e.g., $T=50$), and stacked into a 3D tensor:
+\begin{equation}
+X \in \mathbb{R}^{N \times T \times D}
+\end{equation}
+where $N$ is the number of student sequences, $T$ is the fixed sequence length, and $D$ encompasses both the dense continuous features (latencies) and categorical embeddings (problem/skill IDs). This strict tensorization ensures that the subsequent models process temporal relationships without succumbing to data leakage from future interactions.
+
+\subsection{Phase 2: Dual-State Student Encoder}
+Traditional Knowledge Tracing architectures (like DKT) map an interaction history solely to a cognitive mastery state. The ACDT framework disrupts this paradigm by constructing a \textit{Dual-State Student Encoder} that simultaneously tracks cognition and emotion.
+
+The core architecture utilizes a Transformer mechanism. Because standard Transformers possess no inherent concept of sequence order, we first apply a Positional Encoding (PE) to the input embeddings:
+\begin{equation}
+PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right), \quad PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)
+\end{equation}
+The sequence is then processed via Multi-Head Self-Attention, allowing the network to identify long-range dependencies (e.g., how a series of failures 20 steps ago impacts current frustration levels):
+\begin{equation}
+\operatorname{Attention}(Q, K, V) = \operatorname{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\end{equation}
+The Transformer's final hidden state is compressed into a 128-dimensional joint latent representation:
+\begin{equation}
+\mathbf{z}_t = [\mathbf{z}_t^{cog} \oplus \mathbf{z}_t^{aff}]
+\end{equation}
+
+To enforce this dual representation, the network splits the latent vector into two parallel prediction heads:
+1. \textbf{The Cognitive Head} uses a Sigmoid activation to predict the binary probability of answering the \textit{next} problem correctly. It is optimized via Binary Cross-Entropy (BCE) loss:
+\begin{equation}
+\mathcal{L}_{cog} = - \frac{1}{N} \sum_{i=1}^N \left[ y_i \log(p_i) + (1-y_i)\log(1-p_i) \right]
+\end{equation}
+2. \textbf{The Affective Head} uses linear activations to regress four continuous affective probabilities (Frustration, Confusion, Concentration, Boredom) derived from the dataset's field-observation annotations. This head is optimized via Mean Squared Error (MSE). By optimizing these heads jointly through a shared encoder body, the model learns the inherent cross-talk between mastery and emotional state.
+
+\subsection{Phase 3: Action-Conditioned Probabilistic World Model}
+Once the current latent state $\mathbf{z}_t$ is encoded, the system requires a "simulator" to evaluate what will happen to the student if a specific pedagogical action $a_t$ (i.e., a specific math problem) is administered. This is the role of the Action-Conditioned World Model.
+
+Instead of predicting a single deterministic future state, human emotion and learning are inherently stochastic. Therefore, the World Model utilizes a Gaussian Mixture Density Network (MDN) approach. The model takes the concatenation of $[\mathbf{z}_t, a_t]$ and outputs the parameters of a Gaussian Mixture: mixture weights $\pi_k$, means $\mu_k$, and variances $\sigma_k^2$. The probability density of the next state is given by:
+\begin{equation}
+P(\mathbf{z}_{t+1} | \mathbf{z}_t, a_t) = \sum_{k=1}^K \pi_k \mathcal{N}(\mathbf{z}_{t+1} | \mu_k, \sigma_k^2)
+\end{equation}
+
+Crucially, this MDN approach allows the extraction of \textit{epistemic uncertainty}. By analyzing the standard deviation (\texttt{mean\_latent\_std}) across the mixture components, the system quantifies its own confidence. If the planner proposes an intervention drastically outside the model's training distribution, the uncertainty score spikes, allowing the system to penalize and avoid unsafe, hallucinated pedagogical trajectories.
+
+\subsection{Phase 4: MCTS Counterfactual Planner}
+With a functional offline simulator (the World Model), the system can safely search for the optimal curriculum without experimenting on live students. We utilize Monte Carlo Tree Search (MCTS). MCTS operates iteratively through four stages:
+1. \textbf{Selection:} The algorithm traverses the search tree from the root node ($\mathbf{z}_t$) by selecting child nodes (actions) that maximize the Upper Confidence Bound for Trees (UCT):
+\begin{equation}
+UCT = \frac{W_i}{N_i} + c \sqrt{\frac{\ln N_p}{N_i}}
+\end{equation}
+This formula elegantly balances \textit{exploitation} (choosing actions with high known reward $W_i/N_i$) with \textit{exploration} (choosing actions rarely visited, driven by the exploration constant $c$).
+2. \textbf{Expansion:} If a node is not fully expanded, valid problems from the 53,091-item candidate catalog are added as new child nodes.
+3. \textbf{Simulation (Rollout):} The World Model predicts the subsequent latent states over a fixed horizon (e.g., $K=3$ steps). The terminal state is evaluated using a Multi-Objective Reward Function that explicitly penalizes negative affect:
+\begin{equation}
+R = w_{cog}(\text{Mastery}) - w_{frust}(\text{Frustration}) - w_{bored}(\text{Boredom}) + w_{conc}(\text{Concentration})
+\end{equation}
+4. \textbf{Backpropagation:} The terminal reward $R$ is propagated back up the tree, updating the cumulative rewards $W_i$ and visit counts $N_i$ of all ancestor nodes. After hundreds of simulations, the planner selects the path with the highest robust expected reward.
+
+\subsection{Phase 5: Generative LLM Tutor}
+While MCTS provides a mathematically optimal sequence of Problem IDs, raw IDs are useless to a student. We must translate the structural plan into natural language pedagogy. We employ a Large Language Model (LLM) strictly as a generative translation layer.
+
+To ensure resilience, we integrate the OpenRouter API with an automated fallback chain: if the primary model (Gemini 2.5 Flash) encounters a rate-limit or downtime, the system dynamically cascades to LLaMA 3.1, Claude 3.5 Haiku, and finally Mistral 7B. The prompt architecture explicitly feeds the LLM the MCTS-selected topic name alongside the student's numerical affective state. The LLM is forced via system instructions to output a strict JSON schema containing: \texttt{topic}, \texttt{student\_message} (an empathetic greeting), \texttt{pedagogical\_strategy}, \texttt{micro\_lesson} (the actual tutoring content), and \texttt{hints}. By grounding the LLM in the numerical MCTS outputs, we completely eliminate the risk of curriculum hallucination.
+
+\subsection{Phase 6: Full-Stack MERN Dashboard Integration}
+To deliver the ACDT framework to end-users, we engineered a full-stack web application using the MERN stack (MongoDB, Express.js, React, Node.js) combined with Tailwind CSS for rapid UI styling. 
+
+A standard HTTP request-response cycle is insufficient for visualizing a complex AI pipeline. Therefore, the Express.js backend utilizes Server-Sent Events (SSE). SSE maintains a unidirectional, low-latency stream from the server to the client. As the Python backend completes each phase (Data Loading $\rightarrow$ Encoder $\rightarrow$ World Model $\rightarrow$ MCTS $\rightarrow$ LLM), the Express server emits an SSE packet. The React frontend consumes this stream to drive an animated "Live Demo" stepper. 
+
+Once the pipeline resolves, the React UI uses \texttt{Recharts} to render data-dense visualizations: an Affect Radar chart mapping the 4-dimensional emotional state, and a Mastery Progress Bar. The UI is separated into a motivating, constructive \textit{Student View} and an analytical \textit{Teacher View} that flags students experiencing high frustration for immediate human intervention.
+
+\newpage
+% =========================================================
+% CHAPTER 4: IMPLEMENTATION AND RESULTS
+% =========================================================
+\section{Chapter 4 - Implementation and Results}
+
+\subsection{Implementation Pipeline and Dataset Scaling}
+The ACDT architecture was implemented chronologically across distinct data curation, modeling, and generation modules. Utilizing the full ASSISTments 2012-2013 dataset (which includes embedded affective annotations derived from field observations), the system scaled to over 6.1 million raw interactions.
+
+\begin{table}[H]
+\centering
+\caption{Scaled Dataset Characteristics}
+\small
+\begin{tabular}{lr}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Total Interaction Rows & 6,123,270 \\
+Unique Students & 4,918 \\
+Unique Skills Identified & 265 \\
+Unique Problems Logged & 179,999 \\
+Problems with Valid Skill Mappings & 53,091 \\
+Time-Series Sequences Generated ($T=50$) & 149,047 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Dual-State Student Encoder Results}
+The Student Encoder successfully generated the 128-dimensional latent vectors ($\mathbf{z}_t$) across test sequences. The cognitive head, tasked with predicting next-interaction correctness, achieved strong performance indicative of industry-standard DKT mechanisms.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{cognitive_roc_curve.png}
+  \caption{Cognitive Head ROC Curve (AUC = 0.76)}
+  \label{fig:roc}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{cognitive_confusion_matrix.png}
+  \caption{Cognitive Confusion Matrix}
+  \label{fig:cm}
+\end{minipage}
+\end{figure}
+
+The cognitive metrics yielded an Accuracy of 73.97\%, an F1-Score of 0.821, and a True Positive count of 532,330 across testing batches. 
+
+Simultaneously, the affective regression heads demonstrated significant predictive capability, particularly on engagement metrics heavily tied to temporal latency parameters.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{concentration_predicted_vs_actual.png}
+  \caption{Predicted vs Actual Concentration (Pearson $r=0.728$)}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{boredom_predicted_vs_actual.png}
+  \caption{Predicted vs Actual Boredom (Pearson $r=0.288$)}
+\end{minipage}
+\end{figure}
+
+\subsection{Probabilistic World Model Results}
+The World Model effectively learned transition probabilities between latent states based on applied actions (problems). Testing on a held-out dataset of 887,965 state transitions, the network achieved a Mean Squared Error (MSE) of 0.083 and an RMSE of 0.288 in predicting the 128-dimensional continuous vector. Critically, the epistemic uncertainty tracking yielded a 95\% confidence interval coverage of 0.961 (\texttt{coverage\_196std}), confirming that the model's standard deviation output accurately bounds its prediction errors.
+
+\subsection{MCTS Planner Simulation Outcomes}
+Evaluating the MCTS planner on the valid action space (53,091 problems) revealed mathematically sound pedagogical trajectories. As shown in the generated `mcts_fair_plan.csv`, the planner avoids problems that maximize frustration, balancing mastery maintenance with affective stability. 
+
+\begin{table}[H]
+\centering
+\caption{MCTS Optimal Trajectory Extract (Horizon = 3)}
+\label{tab:mcts_results_new}
+\small
+\begin{tabular}{cllccc}
+\toprule
+\textbf{Step} & \textbf{Problem ID} & \textbf{Skill Name} & \textbf{Pred. Mastery} & \textbf{Pred. Frust.} & \textbf{Reward} \\
+\midrule
+1 & 606850 & Ordering Fractions & 0.966 & 0.396 & +0.198 \\
+2 & 569023 & Rounding & 0.969 & 0.397 & -0.001 \\
+3 & 36899 & Add/Sub Integers & 0.951 & 0.397 & -0.033 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Generative LLM Multi-Persona Evaluation}
+To validate the emotional intelligence of the ACDT framework, the MCTS target sequence was passed to the LLM OpenRouter API across distinct algorithmic affective states (Personas).
+
+\begin{table}[H]
+\centering
+\caption{LLM Strategy Adaptation Across Affective Profiles}
+\small
+\begin{tabular}{p{2cm}rrrrl}
+\toprule
+\textbf{Persona} & \textbf{Mastery} & \textbf{Frust.} & \textbf{Conf.} & \textbf{Bored} & \textbf{Generated Pedagogical Strategy} \\
+\midrule
+Frustrated & 48\% & 0.87 & 0.61 & 0.05 & Emotional de-escalation; high scaffolding \\
+Confused & 52\% & 0.38 & 0.79 & 0.08 & Iterative step-by-step conceptual breakdown \\
+Bored & 96\% & 0.07 & 0.03 & 0.88 & Aggressive pacing; challenge-based framing \\
+Engaged & 97\% & 0.40 & 0.04 & 0.19 & Direct confident transition; flow maintenance \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The resulting JSON payloads strictly segregated empathetic dialog (\texttt{student\_message}) from structural mechanics (\texttt{hints}), proving that bounding the LLM context with rigorous MCTS inputs produces stable and pedagogically sound responses.
+
+\subsection{MERN Dashboard and Technical Refinements}
+The deployed system utilizes an Express.js backend and React/Vite frontend. The SSE route streams individual AI pipeline steps to the client UI with artificial progression delays.
+\begin{itemize}
+    \item \textbf{Invalid Action Space Scaling:} Passing 126,908 problems with missing string skill definitions caused LLM hallucination. \textit{Solution:} Enforced strict catalog filtering, reducing the MCTS action space to a clean 53,091 valid nodes.
+    \item \textbf{OpenRouter Exhaustion:} \textit{Solution:} Regulated LLM generation with strict \texttt{max\_tokens=512} limit parameters.
+\end{itemize}
+
+\subsection{Current Limitations}
+Despite its robustness, the current architecture has bounding constraints. Epistemic uncertainty tracking within the World Model is highly functional for short horizons ($K \le 3$). Deeper Monte Carlo rollouts suffer from accumulating variance, causing the hallucinated state space to drift significantly from empirical reality. 
+
+\newpage
+% =========================================================
+% CHAPTER 5: CONCLUSION AND FUTURE WORK
+% =========================================================
+\section{Chapter 5 - Conclusion and Future Work}
+
+\subsection{Summary of Work and Major Findings}
+The Affective-Cognitive Digital Twin (ACDT) framework successfully demonstrates a cohesive, mathematical approach to offline personalized learning. The end-to-end implementation verified critical hypotheses:
+\begin{enumerate}
+    \item A Transformer-based dual-state encoder can seamlessly and simultaneously track cognitive mastery (AUC: 0.76) and emotional volatility (Concentration $r$: 0.728) in a high-dimensional latent space.
+    \item Constructing an action-conditioned Probabilistic World Model enables rigorous offline Monte Carlo Tree Search, successfully discovering optimal pedagogical pathways without requiring live, risky RL exploration.
+    \item Structurally decoupling mathematical curriculum planning from generative language generation produces highly targeted, empathetic, and optimal lessons free from the severe risks of LLM generative hallucination.
+\end{enumerate}
+
+\subsection{Future Enhancements}
+Future expansions will transition the framework into Closed-Loop Continuous Feedback. Deploying the MERN dashboard into active classroom environments will permit the aggregation of live student engagement metrics, generating a new ground-truth dataset for subsequent model fine-tuning. Further enhancements to the MCTS planner, incorporating neural heuristics to prune the vast branching factor of educational pathways, will enable significantly deeper and more accurate planning horizons.
+
+\newpage
+% =========================================================
+% REFERENCES
+% =========================================================
+\begin{thebibliography}{99}
+
+\bibitem{corbett1995}
+A. T. Corbett and J. R. Anderson,
+``Knowledge tracing: Modeling the acquisition of procedural knowledge,''
+\textit{User Modeling and User-Adapted Interaction}, 1995.
+
+\bibitem{piech2015}
+C. Piech et al.,
+``Deep knowledge tracing,''
+\textit{Advances in Neural Information Processing Systems}, 2015.
+
+\bibitem{vaswani2017}
+A. Vaswani et al.,
+``Attention Is All You Need,''
+\textit{Advances in Neural Information Processing Systems}, 2017.
+
+\bibitem{baker2013}
+R. S. J. d. Baker et al.,
+``Sensor-free affect detection for affective computing in education,''
+\textit{International Conference on Artificial Intelligence in Education}, 2013.
+
+\bibitem{ha2018}
+D. Ha and J. Schmidhuber,
+``World Models,''
+\textit{arXiv preprint arXiv:1803.10122}, 2018.
+
+\bibitem{hafner2023}
+D. Hafner et al.,
+``Mastering Diverse Domains through World Models,''
+\textit{arXiv preprint arXiv:2301.04104}, 2023.
+
+\bibitem{coulom2006}
+R. Coulom,
+``Efficient Selectivity and Backup Operators in Monte-Carlo Tree Search,''
+\textit{Computers and Games}, 2006.
+
+\bibitem{brown2020}
+T. B. Brown et al.,
+``Language Models are Few-Shot Learners,''
+\textit{Advances in Neural Information Processing Systems}, 2020.
+
+\end{thebibliography}
+
+\newpage
+% =========================================================
+% APPENDICES
+% =========================================================
+\section*{Appendices}
+\addcontentsline{toc}{section}{Appendices}
+
+\subsection*{Appendix A: Individual Contribution Statement}
+The successful engineering and execution of this capstone project represents a deeply collaborative effort. The specific division of technical labor is detailed below:
+
+\vspace{0.5cm}
+\noindent
+\textbf{Pragya Sekar (23BCE1491):}
+\begin{itemize}
+    \item Designed the core end-to-end mathematical architecture of the ACDT framework.
+    \item Engineered the multi-head Transformer dual-state encoder, the action-conditioned Probabilistic World Model, and the UCB1-based Monte Carlo Tree Search planner.
+    \item Developed the resilient LLM generation tier, integrating the OpenRouter API with sequential failover logics and strict JSON structure enforcement.
+    \item Architected and deployed the full-stack MERN Dashboard, leveraging Server-Sent Events (SSE) and Recharts for live pipeline visualization.
+\end{itemize}
+
+\vspace{0.5cm}
+\noindent
+\textbf{Fowzia Nilofer (23BCE5127):}
+\begin{itemize}
+    \item Conducted extensive literature reviews spanning Knowledge Tracing, Affective Computing, and Reinforcement Learning theories.
+    \item Executed dataset investigation, scaling strategies, and preliminary raw telemetry curation across 6.1 million rows.
+    \item Authored significant portions of the project report and translated complex mathematical workflows into comprehensive documentation.
+    \item Generated comprehensive presentation materials for the final evaluation.
+    \item Contributed to the validation metrics, generating the ROC curves, Precision-Recall statistics, and confusion matrices for the cognitive and affective heads.
+\end{itemize}
+
+\end{document}
