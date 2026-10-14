@@ -34,31 +34,31 @@ export default function MCTSPathCard({ steps }) {
             <p className="text-xs text-gray-500 mt-0.5">Problem #{step.problem_id}</p>
 
             {/* Mini affect indicators */}
-            <div className="flex gap-3 mt-2 text-xs text-gray-400">
+            <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-gray-400">
               <span>
                 Mastery{' '}
                 <span className={`font-semibold ${
-                  step.predicted_correctness >= 0.8 ? 'text-emerald-400' :
-                  step.predicted_correctness >= 0.6 ? 'text-yellow-400'  : 'text-red-400'
+                  Number(step.predicted_correctness ?? 0) >= 0.8 ? 'text-emerald-400' :
+                  Number(step.predicted_correctness ?? 0) >= 0.6 ? 'text-yellow-400'  : 'text-red-400'
                 }`}>
-                  {(step.predicted_correctness * 100).toFixed(0)}%
+                  {(Number(step.predicted_correctness ?? 0) * 100).toFixed(0)}%
                 </span>
               </span>
               <span className="text-gray-600">|</span>
               <span>
                 Frustration{' '}
                 <span className={`font-semibold ${
-                  step.predicted_frustration > 0.6 ? 'text-red-400' :
-                  step.predicted_frustration > 0.4 ? 'text-yellow-400' : 'text-emerald-400'
+                  Number(step.predicted_frustration ?? 0) > 0.6 ? 'text-red-400' :
+                  Number(step.predicted_frustration ?? 0) > 0.4 ? 'text-yellow-400' : 'text-emerald-400'
                 }`}>
-                  {(step.predicted_frustration * 100).toFixed(0)}%
+                  {(Number(step.predicted_frustration ?? 0) * 100).toFixed(0)}%
                 </span>
               </span>
               <span className="text-gray-600">|</span>
               <span>
                 Reward{' '}
                 <span className="font-semibold text-indigo-400">
-                  {step.immediate_reward.toFixed(2)}
+                  {Number(step.immediate_reward ?? step.reward ?? 0).toFixed(3)}
                 </span>
               </span>
             </div>

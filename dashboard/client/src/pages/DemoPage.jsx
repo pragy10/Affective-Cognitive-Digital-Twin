@@ -119,11 +119,11 @@ export default function DemoPage() {
     problem_id:              s.problem_id,
     skill_id:                null,
     skill_name:              s.skill_name,
-    predicted_correctness:   activeState.correctness,
-    predicted_frustration:   parseFloat(step6Data.predicted_frustration ?? activeState.frustration),
-    predicted_confusion:     activeState.confusion,
-    predicted_concentration: activeState.concentration,
-    predicted_boredom:       activeState.boredom,
+    predicted_correctness:   s.predicted_correctness ?? activeState.correctness,
+    predicted_frustration:   s.predicted_frustration ?? activeState.frustration,
+    predicted_confusion:     s.predicted_confusion   ?? activeState.confusion,
+    predicted_concentration: s.predicted_concentration ?? activeState.concentration,
+    predicted_boredom:       s.predicted_boredom     ?? activeState.boredom,
     immediate_reward:        parseFloat(s.reward),
   })) ?? null;
 
