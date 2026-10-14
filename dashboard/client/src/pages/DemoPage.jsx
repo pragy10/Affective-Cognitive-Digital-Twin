@@ -20,6 +20,7 @@ const STEP_TITLES = [
 const DEFAULT_CUSTOM = {
   correctness: 0.75, frustration: 0.35, confusion: 0.20,
   concentration: 0.55, boredom: 0.15,
+  hintCount: 2, attemptCount: 3, responseTimeS: 45.2,
 };
 
 export default function DemoPage() {
@@ -56,13 +57,20 @@ export default function DemoPage() {
     setSteps(initial);
 
     // Build query string from active state
-    const { frustration, confusion, concentration, boredom, correctness } = activeState;
+    const {
+      frustration, confusion, concentration, boredom, correctness,
+      hintCount, attemptCount, responseTimeS,
+    } = activeState;
+
     const params = new URLSearchParams({
-      frustration:   frustration.toFixed(2),
-      confusion:     confusion.toFixed(2),
-      concentration: concentration.toFixed(2),
-      boredom:       boredom.toFixed(2),
-      correctness:   correctness.toFixed(2),
+      frustration:     frustration.toFixed(2),
+      confusion:       confusion.toFixed(2),
+      concentration:   concentration.toFixed(2),
+      boredom:         boredom.toFixed(2),
+      correctness:     correctness.toFixed(2),
+      hint_count:      String(hintCount ?? 2),
+      attempt_count:   String(attemptCount ?? 3),
+      response_time_s: String(responseTimeS ?? 45.2),
     });
 
     // Open SSE connection

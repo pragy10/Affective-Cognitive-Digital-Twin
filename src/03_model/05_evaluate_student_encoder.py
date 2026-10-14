@@ -38,10 +38,18 @@ No model training is performed.
 
 import importlib
 from pathlib import Path
+import sys
+
+# Ensure project root is in sys.path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 import numpy as np
 import pandas as pd
 import torch
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from sklearn.metrics import (

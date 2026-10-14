@@ -127,6 +127,17 @@ router.get("/run-pipeline", async (req, res) => {
   const boredom       = parseFloat(req.query.boredom       ?? 0.2);
   const correctness   = parseFloat(req.query.correctness   ?? 0.8);
 
+  // Behavioral telemetry inputs (user-configurable or preset)
+  const hintCount     = Math.max(0, parseInt(req.query.hint_count ?? 2, 10));
+  const attemptCount  = Math.max(1, parseInt(req.query.attempt_count ?? 3, 10));
+  const responseTimeS = Math.max(0.1, parseFloat(req.query.response_time_s ?? 45.2));
+
+  // Compute derived behavioral features
+  const hintToAttemptRatio = (hintCount / attemptCount).toFixed(2);
+  // Baseline ASSISTments response time mean ~25.5s, std ~10.7s
+  const zScoreVal = ((responseTimeS - 25.5) / 10.7);
+  const zScoreStr = (zScoreVal >= 0 ? "+" : "") + zScoreVal.toFixed(2);
+
   // Load MCTS plan (used to populate steps 5 & 6)
   const mctsRows = readCSV(path.join(RESULTS, "mcts/mcts_fair_plan.csv"));
   const step1    = mctsRows ? mctsRows[0] : null;
@@ -150,11 +161,11 @@ router.get("/run-pipeline", async (req, res) => {
     step: 2, status: "done",
     title: "Behavioral Feature Extraction",
     data: {
-      hint_count:           "2",
-      attempt_count:        "3",
-      avg_response_time_s:  "45.2",
-      hint_to_attempt_ratio: "0.67",
-      response_time_z_score: "+1.84",
+      hint_count:            String(hintCount),
+      attempt_count:         String(attemptCount),
+      avg_response_time_s:   responseTimeS.toFixed(1),
+      hint_to_attempt_ratio: hintToAttemptRatio,
+      response_time_z_score: zScoreStr,
     },
   });
 
